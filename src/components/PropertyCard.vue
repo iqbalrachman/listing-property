@@ -2,10 +2,7 @@
 import { computed } from 'vue'
 import { formatRupiah } from '../services/format'
 
-const props = defineProps({
-  property: { type: Object, required: true }
-})
-
+const props = defineProps({ property: { type: Object, required: true } })
 const isSold = computed(() => props.property.status === 'Sold')
 const coverUrl = computed(() => props.property.cover_url || '')
 </script>
@@ -22,7 +19,10 @@ const coverUrl = computed(() => props.property.cover_url || '')
     </div>
     <div class="body">
       <h3 class="title">{{ property.title }}</h3>
-      <p class="location">{{ property.city }} · {{ property.property_type }}</p>
+      <p class="location">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        {{ property.city }} · {{ property.property_type }}
+      </p>
       <p class="price mono">{{ formatRupiah(property.price) }}</p>
       <div class="specs mono">
         <span v-if="property.land_area">LT {{ property.land_area }}m²</span>
@@ -36,74 +36,33 @@ const coverUrl = computed(() => props.property.cover_url || '')
 
 <style scoped>
 .card {
-  display: block;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: block; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(20, 33, 61, 0.08);
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: 0 12px 32px rgba(108,92,231,0.25);
 }
-.cover {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  background: #E4E6EA;
-}
-.cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+.cover { position: relative; aspect-ratio: 4/3; background: var(--surface-alt); }
+.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .cover-fallback {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 12px;
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 12px;
 }
-.badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
-.id-stamp {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(255,255,255,0.92);
-}
-.body {
-  padding: 16px;
-}
-.title {
-  font-size: 17px;
-  line-height: 1.3;
-  margin-bottom: 4px;
-}
+.badge { position: absolute; top: 10px; left: 10px; }
+.id-stamp { position: absolute; bottom: 10px; right: 10px; }
+.body { padding: 16px; }
+.title { font-size: 17px; line-height: 1.3; margin-bottom: 6px; color: var(--text); }
 .location {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin: 0 0 10px;
+  font-size: 13px; color: var(--text-muted); margin: 0 0 10px;
+  display: flex; align-items: center; gap: 5px;
 }
-.price {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--brass-dark);
-  margin: 0 0 10px;
-}
+.location .icon { width: 14px; height: 14px; }
+.price { font-size: 17px; font-weight: 600; color: var(--accent); margin: 0 0 10px; }
 .specs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 11px;
-  color: var(--text-muted);
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
+  display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--text-muted);
+  border-top: 1px solid var(--line); padding-top: 10px;
 }
 </style>
