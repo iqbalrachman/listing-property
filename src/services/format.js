@@ -10,27 +10,39 @@ export function formatRupiah(value) {
   return 'Rp ' + num.toLocaleString('id-ID')
 }
 
-// Bucket harga sesuai kesepakatan filter:
-// <500 Juta | 500 Juta-1 M | 1 M-3 M | 3 M-5 M | >5 M
-export const PRICE_RANGES = [
-  { key: 'lt500jt', label: '< 500 Juta', min: 0, max: 500_000_000 },
-  { key: '500jt-1m', label: '500 Juta - 1 M', min: 500_000_000, max: 1_000_000_000 },
-  { key: '1m-3m', label: '1 M - 3 M', min: 1_000_000_000, max: 3_000_000_000 },
-  { key: '3m-5m', label: '3 M - 5 M', min: 3_000_000_000, max: 5_000_000_000 },
-  { key: 'gt5m', label: '> 5 M', min: 5_000_000_000, max: Infinity }
-]
-
-export function priceInRange(price, rangeKey) {
-  const range = PRICE_RANGES.find(r => r.key === rangeKey)
-  if (!range) return true
-  const num = Number(price)
-  return num >= range.min && num < range.max
-}
-
-// Kolom "featured" di sheet bisa berupa checkbox (TRUE/FALSE) atau teks (Ya/Tidak)
 export function isFeatured(value) {
   if (value === true) return true
   if (!value) return false
   const v = String(value).trim().toLowerCase()
   return ['true', 'ya', 'yes', '1', 'checked'].includes(v)
+}
+
+// Filter harga minimum-maksimum bebas (bukan bucket tetap lagi)
+export function priceInMinMax(price, min, max) {
+  const num = Number(price)
+  if (min !== '' && min !== null && num < Number(min)) return false
+  if (max !== '' && max !== null && num > Number(max)) return false
+  return true
+}
+
+// Pencarian kata kunci di judul & kota
+export function matchesKeyword(property, keyword) {
+  if (!keyword) return true
+  const k = keyword.trim().toLowerCase()
+  return (
+    (property.title || '').toLowerCase().includes(k) ||
+    (property.city || '').toLowerCase().includes(k)
+  )
+}
+
+// Urutkan: price_asc, price_desc, newest, oldest
+export function sortProperties(list, sortKey) {
+  const arr = [...list]
+  switch (sortKey) {
+    case 'price_asc': return arr.sort((a, b) => Number(a.price) - Number(b.price))
+    case 'price_desc': return arr.sort((a, b) => Number(b.price) - Number(a.price))
+    case 'oldest': return arr.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    case 'newest':
+    default: return arr.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+  }
 }
