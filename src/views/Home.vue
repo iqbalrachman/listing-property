@@ -10,19 +10,11 @@ const loading = ref(true)
 const error = ref('')
 
 const featuredList = computed(() => properties.value.filter(p => isFeatured(p.featured)))
-
-// Kalau ada properti yang ditandai featured di sheet, tampilkan itu.
-// Kalau belum ada satupun yang ditandai, fallback ke 6 properti terbaru.
 const latest = computed(() => {
   const source = featuredList.value.length ? featuredList.value : properties.value
-  return [...source]
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    .slice(0, 6)
+  return [...source].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6)
 })
-
-const sectionTitle = computed(() =>
-  featuredList.value.length ? 'Properti Pilihan' : 'Properti Terbaru'
-)
+const sectionTitle = computed(() => featuredList.value.length ? 'Properti Pilihan' : 'Properti Terbaru')
 
 onMounted(async () => {
   try {
@@ -44,7 +36,7 @@ onMounted(async () => {
         Jelajahi listing rumah, apartemen, ruko, tanah, dan properti komersial pilihan
         di area Jabodetabek.
       </p>
-      <router-link to="/listing" class="btn btn-brass">Lihat Semua Listing</router-link>
+      <router-link to="/listing" class="btn btn-accent">Lihat Semua Listing</router-link>
     </div>
   </section>
 
@@ -65,53 +57,20 @@ onMounted(async () => {
 
 <style scoped>
 .hero {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 80px 0 64px;
+  background: radial-gradient(circle at top left, rgba(108,92,231,0.25), transparent 60%), var(--bg);
+  padding: 90px 0 64px;
+  border-bottom: 1px solid var(--line);
 }
-.hero-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-}
-.hero-inner .stamp {
-  color: var(--brass);
-  border-color: rgba(184, 147, 95, 0.5);
-}
-.hero h1 {
-  font-size: clamp(32px, 5vw, 52px);
-  max-width: 700px;
-  line-height: 1.1;
-}
-.hero-sub {
-  color: #b8bfd4;
-  max-width: 520px;
-  font-size: 16px;
-  margin: 0;
-}
-.latest {
-  padding: 56px 24px;
-}
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 24px;
-}
+.hero-inner { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.hero-inner .stamp { color: var(--accent); border-color: rgba(0,229,199,0.35); }
+.hero h1 { font-size: clamp(32px, 5vw, 54px); max-width: 720px; line-height: 1.1; color: var(--text); }
+.hero-sub { color: var(--text-muted); max-width: 520px; font-size: 16px; margin: 0; }
+.latest { padding: 56px 24px; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
 .section-head h2 { font-size: 24px; }
-.see-all {
-  font-size: 13px;
-  color: var(--brass-dark);
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
-.status {
-  color: var(--text-muted);
-  font-size: 13px;
-}
+.see-all { font-size: 13px; color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.status { color: var(--text-muted); font-size: 13px; }
 .status.error { color: var(--terjual); }
 </style>
+</parameter>
