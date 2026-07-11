@@ -46,3 +46,10 @@ export function sortProperties(list, sortKey) {
     default: return arr.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   }
 }
+
+// Format Rupiah penuh dengan pemisah ribuan, khusus untuk kalkulator
+export function formatRupiahFull(value) {
+  const num = Number(value)
+  if (!num || isNaN(num)) return 'Rp 0'
+  return 'Rp ' + Math.round(num).toLocaleString('id-ID')
+}
