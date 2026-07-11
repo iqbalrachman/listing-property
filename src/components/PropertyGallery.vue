@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, reactive, watch } from 'vue'
+import { ref, computed, reactive } from 'vue'
 
 const props = defineProps({
   coverUrl: { type: String, default: '' },
@@ -88,6 +88,15 @@ function onKeydown(e) {
 <style scoped>
 .gallery { outline: none; }
 
+.main-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
 .main-frame img.main-img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   user-select: none; -webkit-user-drag: none;
@@ -101,10 +110,7 @@ function onKeydown(e) {
   transform: scale(1);
   opacity: 1;
 }
-.main-frame img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  user-select: none; -webkit-user-drag: none;
-}
+
 .fallback {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -122,6 +128,7 @@ function onKeydown(e) {
   color: #fff;
   cursor: pointer;
   transition: background 0.15s ease;
+  z-index: 3;
 }
 .nav-btn:hover { background: rgba(108,92,231,0.75); }
 .nav-btn.prev { left: 10px; }
@@ -134,6 +141,7 @@ function onKeydown(e) {
   backdrop-filter: blur(4px);
   color: #fff; font-size: 11px;
   padding: 3px 8px; border-radius: 6px;
+  z-index: 3;
 }
 
 .dots {
@@ -141,11 +149,12 @@ function onKeydown(e) {
   margin-top: 12px;
 }
 .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--line); border: none; padding: 0; cursor: pointer;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(137,146,172,0.5); /* dinaikkan kontrasnya dari var(--line) */
+  border: none; padding: 0; cursor: pointer;
   transition: background 0.15s ease, width 0.15s ease;
 }
-.dot.active { background: var(--accent); width: 18px; border-radius: 3px; }
+.dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
 
 .thumbs {
   display: flex; gap: 8px; margin-top: 10px; overflow-x: auto;
@@ -160,6 +169,6 @@ function onKeydown(e) {
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 640px) {
-  .thumbs { display: none; } /* di mobile cukup swipe + dots, thumbnail strip bikin sempit */
+  .thumbs { display: none; }
 }
 </style>
