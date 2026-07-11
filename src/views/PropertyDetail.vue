@@ -3,13 +3,13 @@ import { ref, onMounted, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchPropertyById } from '../services/api'
 import { formatRupiah } from '../services/format'
+import PropertyGallery from '../components/PropertyGallery.vue'
 
 const route = useRoute()
 const settings = inject('settings')
 const property = ref(null)
 const loading = ref(true)
 const error = ref('')
-const activeImage = ref('')
 
 const isSold = computed(() => property.value?.status === 'Sold')
 
@@ -29,11 +29,7 @@ const waLink = computed(() => {
 onMounted(async () => {
   try {
     property.value = await fetchPropertyById(route.params.id)
-    if (!property.value) {
-      error.value = 'Properti tidak ditemukan.'
-    } else {
-      activeImage.value = property.value.cover_url || ''
-    }
+    if (!property.value) error.value = 'Properti tidak ditemukan.'
   } catch (err) {
     error.value = err.message
   } finally {
@@ -51,19 +47,16 @@ onMounted(async () => {
       <router-link to="/listing" class="back mono">← Kembali ke listing</router-link>
 
       <div class="layout">
-        <div class="gallery">
-          <div class="main-image">
-            <img v-if="activeImage" :src="activeImage" :alt="property.title" />
-            <div v-else class="cover-fallback mono">Foto belum tersedia</div>
-            <span class="badge" :class="isSold ? 'badge-terjual' : 'badge-available'">
-              {{ isSold ? 'Terjual' : 'Tersedia' }}
-            </span>
-          </div>
-          <div class="thumbs" v-if="property.gallery?.length">
-            <button v-for="img in property.gallery" :key="img.url" class="thumb" @click="activeImage = img.url">
-              <img :src="img.url" :alt="img.name" />
-            </button>
-          </div>
+        <div class="gallery-wrap">
+          <PropertyGallery
+            :cover-url="property.cover_url"
+            :gallery="property.gallery || []"
+            :title="property.title"
+          />
+          <span class="badge floating" :class="isSold ? 'badge-terjual' : 'badge-available'">
+            {{ isSold ? 'Terjual' : 'Tersedia' }}
+          </span>
+        </div>
         </div>
 
         <div class="info">
@@ -113,12 +106,13 @@ onMounted(async () => {
 .status { color: var(--text-muted); font-size: 13px; }
 .status.error { color: var(--terjual); }
 .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; }
-.main-image { position: relative; aspect-ratio: 4/3; background: var(--surface-alt); border-radius: var(--radius); overflow: hidden; }
+
 .main-image img { width: 100%; height: 100%; object-fit: cover; }
-.cover-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
+
 .main-image .badge { position: absolute; top: 12px; left: 12px; }
-.thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
-.thumb { border: 1px solid var(--line); background: none; padding: 0; width: 64px; height: 64px; border-radius: 6px; overflow: hidden; flex-shrink: 0; cursor: pointer; }
+.gallery-wrap { position: relative; }
+.badge.floating { position: absolute; top: 12px; left: 12px; z-index: 5; }
+  
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .info h1 { font-size: 28px; margin: 10px 0 4px; line-height: 1.2; color: var(--text); }
 .location { color: var(--text-muted); margin: 0 0 12px; display: flex; align-items: center; gap: 6px; }
