@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import PropertyCard from '../components/PropertyCard.vue'
 import { fetchProperties } from '../services/api'
 import { isFeatured } from '../services/format'
+import MortgageCalculator from '../components/MortgageCalculator.vue'
 
 const settings = inject('settings')
 const router = useRouter()
@@ -147,6 +148,16 @@ onMounted(async () => {
       </div>
     </div>
   </section>
+
+  <!-- KALKULATOR CICILAN -->
+  <section class="container calc-section">
+    <div class="section-head">
+      <h2>Kalkulator Simulasi Cicilan KPR</h2>
+      <p class="calc-sub mono">Perkirakan angsuran bulanan sebelum menghubungi agent</p>
+    </div>
+    <MortgageCalculator />
+  </section>
+  
 </template>
 
 <style scoped>
@@ -248,4 +259,6 @@ onMounted(async () => {
 .trust-icon .icon { width: 24px; height: 24px; color: var(--primary-light); }
 .trust-card h3 { font-size: 17px; margin-bottom: 8px; }
 .trust-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+.calc-section { padding: 20px 24px 70px; }
+.calc-sub { color: var(--text-muted); font-size: 13px; margin: 6px 0 24px; }
 </style>
