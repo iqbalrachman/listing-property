@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 
 const props = defineProps({
   coverUrl: { type: String, default: '' },
@@ -16,6 +16,10 @@ const images = computed(() => {
 
 const activeIndex = ref(0)
 const touchStartX = ref(0)
+const loadedMap = reactive({})
+
+function markLoaded(url) { loadedMap[url] = true }
+const isLoaded = (url) => !!loadedMap[url]
 
 function goTo(index) {
   if (index < 0) index = images.value.length - 1
@@ -39,57 +43,40 @@ function onKeydown(e) {
 
 <template>
   <div class="gallery" tabindex="0" @keydown="onKeydown">
-    <div
-      class="main-frame"
-      @touchstart="onTouchStart"
-      @touchend="onTouchEnd"
-    >
+    <div class="main-frame" @touchstart="onTouchStart" @touchend="onTouchEnd">
       <img
         v-if="images.length"
+        :key="images[activeIndex].url"
         :src="images[activeIndex].url"
         :alt="title"
+        class="main-img"
+        :class="{ loaded: isLoaded(images[activeIndex].url) }"
+        @load="markLoaded(images[activeIndex].url)"
       />
       <div v-else class="fallback mono">Foto belum tersedia</div>
 
-      <button
-        v-if="images.length > 1"
-        class="nav-btn prev"
-        @click="prev"
-        aria-label="Foto sebelumnya"
-      >
+      <button v-if="images.length > 1" class="nav-btn prev" @click="prev" aria-label="Foto sebelumnya">
         <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <button
-        v-if="images.length > 1"
-        class="nav-btn next"
-        @click="next"
-        aria-label="Foto berikutnya"
-      >
+      <button v-if="images.length > 1" class="nav-btn next" @click="next" aria-label="Foto berikutnya">
         <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
       </button>
 
-      <div class="counter mono" v-if="images.length > 1">
-        {{ activeIndex + 1 }} / {{ images.length }}
-      </div>
+      <div class="counter mono" v-if="images.length > 1">{{ activeIndex + 1 }} / {{ images.length }}</div>
     </div>
 
     <div class="dots" v-if="images.length > 1">
       <button
-        v-for="(img, i) in images"
-        :key="img.url"
-        class="dot"
-        :class="{ active: i === activeIndex }"
-        @click="goTo(i)"
-        :aria-label="`Foto ke-${i + 1}`"
+        v-for="(img, i) in images" :key="img.url"
+        class="dot" :class="{ active: i === activeIndex }"
+        @click="goTo(i)" :aria-label="`Foto ke-${i + 1}`"
       ></button>
     </div>
 
     <div class="thumbs" v-if="images.length > 1">
       <button
-        v-for="(img, i) in images"
-        :key="img.url + '-thumb'"
-        class="thumb"
-        :class="{ active: i === activeIndex }"
+        v-for="(img, i) in images" :key="img.url + '-thumb'"
+        class="thumb" :class="{ active: i === activeIndex }"
         @click="goTo(i)"
       >
         <img :src="img.url" :alt="img.name" />
@@ -101,13 +88,18 @@ function onKeydown(e) {
 <style scoped>
 .gallery { outline: none; }
 
-.main-frame {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  background: var(--surface-alt);
-  border-radius: var(--radius);
-  overflow: hidden;
-  touch-action: pan-y;
+.main-frame img.main-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  user-select: none; -webkit-user-drag: none;
+  filter: blur(14px);
+  transform: scale(1.04);
+  opacity: 0.75;
+  transition: filter 0.35s ease, transform 0.35s ease, opacity 0.35s ease;
+}
+.main-frame img.main-img.loaded {
+  filter: blur(0);
+  transform: scale(1);
+  opacity: 1;
 }
 .main-frame img {
   width: 100%; height: 100%; object-fit: cover; display: block;
