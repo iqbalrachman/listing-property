@@ -57,7 +57,6 @@ onMounted(async () => {
             {{ isSold ? 'Terjual' : 'Tersedia' }}
           </span>
         </div>
-        </div>
 
         <div class="info">
           <span class="stamp">{{ property.id }}</span>
@@ -107,13 +106,9 @@ onMounted(async () => {
 .status.error { color: var(--terjual); }
 .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; }
 
-.main-image img { width: 100%; height: 100%; object-fit: cover; }
-
-.main-image .badge { position: absolute; top: 12px; left: 12px; }
 .gallery-wrap { position: relative; }
 .badge.floating { position: absolute; top: 12px; left: 12px; z-index: 5; }
-  
-.thumb img { width: 100%; height: 100%; object-fit: cover; }
+
 .info h1 { font-size: 28px; margin: 10px 0 4px; line-height: 1.2; color: var(--text); }
 .location { color: var(--text-muted); margin: 0 0 12px; display: flex; align-items: center; gap: 6px; }
 .location .icon { width: 15px; height: 15px; }
