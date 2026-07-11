@@ -1,16 +1,25 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import PropertyCard from '../components/PropertyCard.vue'
 import FilterBar from '../components/FilterBar.vue'
 import { fetchProperties } from '../services/api'
 import { priceInMinMax, matchesKeyword, sortProperties } from '../services/format'
 
 const PAGE_SIZE = 9
+const route = useRoute()
 
 const properties = ref([])
 const loading = ref(true)
 const error = ref('')
-const filters = ref({ type: '', city: '', priceMin: '', priceMax: '', keyword: '', sort: 'newest' })
+const filters = ref({
+  type: route.query.type || '',
+  city: route.query.city || '',
+  priceMin: '',
+  priceMax: '',
+  keyword: route.query.keyword || '',
+  sort: 'newest'
+})
 const page = ref(1)
 
 const filtered = computed(() => {
@@ -89,8 +98,6 @@ onMounted(async () => {
 }
 .status { margin-top: 24px; color: var(--text-muted); font-size: 13px; }
 .status.error { color: var(--terjual); }
-.pagination {
-  display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 36px;
-}
+.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 36px; }
 .page-info { color: var(--text-muted); font-size: 13px; }
 </style>
