@@ -1,16 +1,23 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { formatRupiah } from '../services/format'
 
 const props = defineProps({ property: { type: Object, required: true } })
 const isSold = computed(() => props.property.status === 'Sold')
 const coverUrl = computed(() => props.property.cover_url || '')
+const imgLoaded = ref(false)
 </script>
 
 <template>
   <router-link :to="`/properti/${property.id}`" class="card">
     <div class="cover">
-      <img v-if="coverUrl" :src="coverUrl" :alt="property.title" loading="lazy" />
+      <img v-if="coverUrl"
+        :src="coverUrl"
+        :alt="property.title"
+        loading="lazy"
+        class="cover-img"
+        :class="{ loaded: imgLoaded }"
+        @load="imgLoaded = true" />
       <div v-else class="cover-fallback mono">Foto belum tersedia</div>
       <span class="badge" :class="isSold ? 'badge-terjual' : 'badge-available'">
         {{ isSold ? 'Terjual' : 'Tersedia' }}
@@ -46,7 +53,16 @@ const coverUrl = computed(() => props.property.cover_url || '')
   box-shadow: 0 12px 32px rgba(108,92,231,0.25);
 }
 .cover { position: relative; aspect-ratio: 4/3; background: var(--surface-alt); }
-.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover img.cover-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: blur(12px);
+  transform: scale(1.04);
+  opacity: 0.75;
+  transition: filter 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+.cover img.cover-img.loaded {
+  filter: blur(0); transform: scale(1); opacity: 1;
+}
 .cover-fallback {
   width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
   color: var(--text-muted); font-size: 12px;
