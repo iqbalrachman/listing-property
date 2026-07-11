@@ -7,6 +7,7 @@ import { isFeatured } from '../services/format'
 
 const settings = inject('settings')
 const router = useRouter()
+const heroImage = `${import.meta.env.BASE_URL}hero.jpg`
 
 const properties = ref([])
 const loading = ref(true)
@@ -19,7 +20,6 @@ const highlighted = computed(() => {
 })
 const sectionTitle = computed(() => featuredList.value.length ? 'Properti Pilihan' : 'Properti Terbaru')
 
-// Data untuk dropdown quick search, diambil dari data yang sudah ada
 const cityOptions = computed(() => {
   const set = new Set(properties.value.map(p => p.city).filter(Boolean))
   return Array.from(set).sort()
@@ -39,7 +39,6 @@ function submitSearch() {
   router.push({ path: '/listing', query })
 }
 
-// Scroll horizontal untuk featured
 const scrollTrack = ref(null)
 function scrollFeatured(direction) {
   if (!scrollTrack.value) return
@@ -79,7 +78,7 @@ onMounted(async () => {
 <template>
   <!-- HERO -->
   <section class="hero">
-    <img class="hero-bg" :src="`${import.meta.env.BASE_URL}hero.jpg`" alt="" @error="$event.target.style.display='none'" />
+    <img class="hero-bg" :src="heroImage" alt="" @error="$event.target.style.display='none'" />
     <div class="hero-overlay"></div>
     <div class="container hero-inner">
       <span class="stamp">Katalog Properti</span>
@@ -151,7 +150,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* HERO */
 .hero {
   position: relative;
   padding: 100px 0 70px;
@@ -203,7 +201,6 @@ onMounted(async () => {
   .search-box select, .search-box .btn { width: 100%; }
 }
 
-/* FEATURED SCROLL */
 .latest { padding: 56px 24px; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
 .section-head h2 { font-size: 24px; }
@@ -231,7 +228,6 @@ onMounted(async () => {
 .scroll-btn.next { right: -8px; }
 @media (max-width: 900px) { .scroll-btn { display: none; } }
 
-/* TRUST SECTION */
 .trust { padding: 20px 24px 64px; }
 .trust-title { font-size: 24px; text-align: center; margin-bottom: 32px; }
 .trust-grid {
