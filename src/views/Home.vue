@@ -5,6 +5,7 @@ import PropertyCard from '../components/PropertyCard.vue'
 import { fetchProperties } from '../services/api'
 import { isFeatured } from '../services/format'
 import MortgageCalculator from '../components/MortgageCalculator.vue'
+import BannerSlider from '../components/BannerSlider.vue'
 
 const settings = inject('settings')
 const router = useRouter()
@@ -106,6 +107,10 @@ onMounted(async () => {
       </form>
     </div>
   </section>
+  <!-- BANNER PROMO -->
+  <section class="container banner-section">
+    <BannerSlider />
+  </section>
 
   <!-- FEATURED -->
   <section class="container latest">
@@ -181,6 +186,7 @@ onMounted(async () => {
 .hero-inner .stamp { color: var(--accent); border-color: rgba(0,229,199,0.35); }
 .hero h1 { font-size: clamp(32px, 5vw, 54px); max-width: 720px; line-height: 1.1; color: var(--text); }
 .hero-sub { color: var(--text-muted); max-width: 520px; font-size: 16px; margin: 0; }
+.banner-section { padding: 32px 24px 0; }
 
 .search-box {
   display: flex; flex-wrap: wrap; gap: 10px;
