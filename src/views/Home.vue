@@ -158,7 +158,7 @@ onMounted(async () => {
   <section class="container calc-section">
     <div class="section-head">
       <h2>Kalkulator Simulasi Cicilan KPR</h2>
-      <p class="calc-sub mono">Perkirakan angsuran bulanan sebelum menghubungi agent</p>
+      <p class="calc-sub mono">Perkiraan angsuran untuk akurasi hubungi agent</p>
     </div>
     <MortgageCalculator />
   </section>
